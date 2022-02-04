@@ -1,5 +1,6 @@
 ﻿using RestWithASPNETUdemy.Model;
 using RestWithASPNETUdemy.Model.Context;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -17,12 +18,28 @@ namespace RestWithASPNETUdemy.Services.Implementations
 
         public Person Create(Person person)
         {
+            try
+            {
+                _context.Add(person);
+                _context.SaveChanges();
+            }
+            catch (Exception) { throw; }
             return person;
         }
 
-        public void Delete(long id)
+        public void Delete(long id) //poderia ser o objeto ao inves do id, mas assim minimiza o trafego
         {
-            
+            var result = _context.Persons.SingleOrDefault(p => p.Id == id);
+            if (result != null)
+            {
+                try
+                {
+                    _context.Persons.Remove(result);
+                    _context.SaveChanges();
+                }
+                catch (Exception) { throw; }
+            }
+
         }
 
         public List<Person> FindAll()
@@ -32,20 +49,28 @@ namespace RestWithASPNETUdemy.Services.Implementations
 
         public Person FindById(long id)
         {
-            return new Person
-            {
-                Id = 1,
-                FirstName = "Anderson",
-                LastName = "Silva",
-                Address = "ES - BR",
-                Gender = "Male"
-            };
+            return _context.Persons.SingleOrDefault(p => p.Id == id);
         }
 
         public Person Update(Person person)
         {
+            if (!Exists(person.Id)) return new Person();
+            var result = _context.Persons.SingleOrDefault(p => p.Id == person.Id);
+            if (result != null)
+            {
+                try
+                {
+                    _context.Entry(result).CurrentValues.SetValues(person);
+                    _context.SaveChanges();
+                }
+                catch (Exception) { throw; }
+            }
             return person;
         }
 
+        private bool Exists(long id)
+        {
+            return _context.Persons.Any(p => p.Id == id);
+        }
     }
 }
