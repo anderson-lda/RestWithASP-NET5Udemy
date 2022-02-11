@@ -41,7 +41,7 @@ namespace RestWithASPNETUdemy.Controllers
             return Ok(_bookBusiness.Create(book));
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult Put([FromBody] BookVO book)
         {
             if (book == null) return BadRequest();
