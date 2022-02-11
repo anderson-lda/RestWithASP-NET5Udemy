@@ -41,7 +41,7 @@ namespace RestWithASPNETUdemy.Controllers
             return Ok(_personBusiness.Create(person));
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult Put([FromBody] Person person)
         {
             if (person == null) return BadRequest();
