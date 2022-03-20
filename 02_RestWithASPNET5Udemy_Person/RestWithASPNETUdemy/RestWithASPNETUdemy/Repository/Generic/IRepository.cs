@@ -13,5 +13,7 @@ namespace RestWithASPNETUdemy.Repository
         T Update(T item);
 
         bool Exists(long Id);
+        List<T> FindWithPagedSearch(string query);
+        int GetCount(string query);
     }
 }
